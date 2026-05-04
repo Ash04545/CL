@@ -1,0 +1,33 @@
+# MapReduce Simulation for Word Frequency
+
+from collections import defaultdict
+
+# Given word to search
+target_word = "data"
+
+# Sample input file content
+file_content = """
+data science is growing
+big data is powerful
+data analysis is important
+"""
+
+# ---------------- MAP PHASE ----------------
+intermediate = []
+
+for line in file_content.strip().split("\n"):
+    words = line.lower().split()
+    for word in words:
+        if word == target_word:
+            intermediate.append((word, 1))
+
+# ---------------- SHUFFLE PHASE ----------------
+grouped = defaultdict(list)
+
+for key, value in intermediate:
+    grouped[key].append(value)
+
+# ---------------- REDUCE PHASE ----------------
+for key in grouped:
+    total = sum(grouped[key])
+    print(f"Frequency of '{key}' is:", total)
