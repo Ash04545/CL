@@ -1,0 +1,68 @@
+# Matrix Multiplication using MapReduce Simulation
+
+from collections import defaultdict
+
+# Input Matrices
+A = [
+    [1, 2],
+    [3, 4]
+]
+
+B = [
+    [5, 6],
+    [7, 8]
+]
+
+m = len(A)
+n = len(A[0])
+p = len(B[0])
+
+# ------------------ MAP PHASE ------------------
+intermediate = []
+
+# Mapper for Matrix A
+for i in range(m):
+    for k in range(n):
+        for j in range(p):
+            intermediate.append(((i, j), ("A", k, A[i][k])))
+
+# Mapper for Matrix B
+for k in range(n):
+    for j in range(p):
+        for i in range(m):
+            intermediate.append(((i, j), ("B", k, B[k][j])))
+
+# ------------------ SHUFFLE PHASE ------------------
+grouped = defaultdict(list)
+
+for key, value in intermediate:
+    grouped[key].append(value)
+
+# ------------------ REDUCE PHASE ------------------
+result = [[0 for _ in range(p)] for _ in range(m)]
+
+for key in grouped:
+    i, j = key
+    values = grouped[key]
+
+    A_values = {}
+    B_values = {}
+
+    for value in values:
+        matrix_name, k, val = value
+        if matrix_name == "A":
+            A_values[k] = val
+        else:
+            B_values[k] = val
+
+    total = 0
+    for k in A_values:
+        if k in B_values:
+            total += A_values[k] * B_values[k]
+
+    result[i][j] = total
+
+# ------------------ OUTPUT ------------------
+print("Result Matrix:")
+for row in result:
+    print(row)
