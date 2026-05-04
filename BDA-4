@@ -1,0 +1,50 @@
+# MapReduce Simulation for Student Grade Calculation
+
+from collections import defaultdict
+
+# Sample Input
+data = """
+101,Neel,85
+102,Rahul,72
+103,Priya,91
+104,Amit,60
+105,Riya,55
+"""
+
+# ---------------- MAP PHASE ----------------
+intermediate = []
+
+for line in data.strip().split("\n"):
+    student_id, name, marks = line.split(",")
+    marks = int(marks)
+
+    # Grade Logic
+    if marks >= 90:
+        grade = "A"
+    elif marks >= 80:
+        grade = "B"
+    elif marks >= 70:
+        grade = "C"
+    elif marks >= 60:
+        grade = "D"
+    else:
+        grade = "F"
+
+    intermediate.append((student_id, (name, marks, grade)))
+
+# ---------------- SHUFFLE PHASE ----------------
+grouped = defaultdict(list)
+
+for key, value in intermediate:
+    grouped[key].append(value)
+
+# ---------------- REDUCE PHASE ----------------
+print("+-----------+----------+--------+-------+")
+print("| StudentID | Name     | Marks  | Grade |")
+print("+-----------+----------+--------+-------+")
+
+for key in sorted(grouped):   # sorted for proper order
+    for record in grouped[key]:
+        print(f"| {key:<9} | {record[0]:<8} | {record[1]:<6} | {record[2]:<5} |")
+
+print("+-----------+----------+--------+-------+")
