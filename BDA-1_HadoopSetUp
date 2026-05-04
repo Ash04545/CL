@@ -1,0 +1,30 @@
+Step 1: Install Virtualization Software
+Oracle VirtualBox
+
+Step 2: Download Cloudera QuickStart VM
+ https://downloads.cloudera.com/demo_vm/virtualbox/cloudera-quickstart-vm-5.13.0-0-virtualbox.zip
+
+Step 3: Import the VM into VirtualBox
+
+Step 4: Start Cloudera VM
+
+Step 5: Start Hadoop Services
+Open terminal and run:
+sudo service hadoop-hdfs-namenode start
+sudo service hadoop-hdfs-datanode start
+sudo service hadoop-yarn-resourcemanager start
+sudo service hadoop-yarn-nodemanager start
+
+Step 6: Verify Hadoop
+Check HDFS:
+hdfs dfsadmin -report
+
+Step 7: Create HDFS Directory
+hdfs dfs -mkdir /input
+
+Step 8: Upload File to HDFS
+hdfs dfs -put sample.txt /input
+
+Step 9: Verify Upload
+Run this command to list files inside the HDFS input directory:
+hdfs dfs -ls /input
